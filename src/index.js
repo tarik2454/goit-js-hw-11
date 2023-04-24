@@ -16,53 +16,41 @@ searchForm.addEventListener('submit', onSearchSubmit);
 function onSearchSubmit(event) {
   event.preventDefault();
 
-  imagesApiService.searchQuery = event.currentTarget.elements.searchQuery.value;
+  imagesApiService.query =
+    event.currentTarget.elements.searchQuery.value.trim();
 
-  imagesApiService.resetLoadedHits();
   imagesApiService.resetPage();
+  imagesApiService.resetLoadedHits();
 
-  imagesApiService.fetchImages().then(images => {
-    if (images.totalHits > 0) {
-      Notiflix.Notify.success(`Hooray! We found ${images.totalHits} images.`);
-    }
-    if (images.hits.length === 0) {
-      Notiflix.Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
-    }
-    clearCardContainer();
-    observer.observe(sentinel);
-    imagesApiService.incrementLoadedHits(images.hits);
-    appendCardsMarkup(images.hits);
+  imagesApiService
+    .fetchImages()
+    .then(images => {
+      if (images.totalHits > 0) {
+        Notiflix.Notify.success(`Hooray! We found ${images.totalHits} images.`);
+      }
+      if (images.hits.length === 0) {
+        Notiflix.Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+      }
 
-    if (images.hits.length === images.totalHits) {
-      observer.unobserve(sentinel);
-      Notiflix.Notify.info(
-        "We're sorry, but you've reached the end of search results."
-      );
-    }
+      clearCardContainer();
+      imagesApiService.incrementLoadedHits(images.hits);
+      appendCardsMarkup(images.hits);
 
-    simpleLightbox.refresh();
-  });
+      observer.observe(sentinel);
+
+      if (images.hits.length === images.totalHits) {
+        observer.unobserve(sentinel);
+        Notiflix.Notify.info(
+          "We're sorry, but you've reached the end of search results."
+        );
+      }
+
+      simpleLightbox.refresh();
+    })
+    .catch(error => console.warn`${error}`);
 }
-
-// function fetchImages() {
-//   imagesApiService
-//     .fetchImages()
-//     .then(images => {
-//       if (images.totalHits > 0) {
-//         Notiflix.Notify.success(`Hooray! We found ${images.totalHits} images.`);
-//       }
-//       if (images.hits.length === 0) {
-//         Notiflix.Notify.failure(
-//           'Sorry, there are no images matching your search query. Please try again.'
-//         );
-//       }
-//       appendCardsMarkup(images.hits);
-//       imagesApiService.incrementPage();
-//     })
-//     .catch(error => console.log(error));
-// }
 
 function appendCardsMarkup(cards) {
   gallery.insertAdjacentHTML('beforeend', cardsTpl(cards));
@@ -74,7 +62,7 @@ function clearCardContainer() {
 
 const onEntry = entries => {
   entries.forEach(entry => {
-    if (entry.isIntersecting && imagesApiService.searchQuery !== '') {
+    if (entry.isIntersecting && imagesApiService.query !== '') {
       imagesApiService
         .fetchImages()
         .then(images => {
@@ -88,7 +76,7 @@ const onEntry = entries => {
           }
 
           appendCardsMarkup(images.hits);
-
+          smoothScrollGallery();
           simpleLightbox.refresh();
         })
         .catch(error => {
@@ -109,3 +97,14 @@ const simpleLightbox = new SimpleLightbox('.gallery a', {
   fadeSpeed: 100,
   animationSlide: false,
 });
+
+function smoothScrollGallery() {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
+}

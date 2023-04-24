@@ -1,3 +1,6 @@
+const BASE_URL = 'https://pixabay.com';
+const API_KEY = '34147979-e919755f9413e6e8eb4321476';
+
 export default class ImagesApiService {
   constructor() {
     this.searchQuery = '';
@@ -6,9 +9,18 @@ export default class ImagesApiService {
   }
 
   fetchImages() {
-    return fetch(
-      `https://pixabay.com/api/?key=34147979-e919755f9413e6e8eb4321476&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`
-    )
+    const searchParams = new URLSearchParams({
+      q: this.searchQuery,
+      image_type: 'photo',
+      orientation: 'horizontal',
+      safesearch: true,
+      per_page: 40,
+      page: this.page,
+    });
+
+    const url = `${BASE_URL}/api/?key=${API_KEY}&${searchParams.toString()}`;
+
+    return fetch(url)
       .then(response => response.json())
       .then(data => {
         this.incrementPage();
@@ -31,5 +43,13 @@ export default class ImagesApiService {
 
   resetLoadedHits() {
     this.loadedHits = 0;
+  }
+
+  get query() {
+    return this.searchQuery;
+  }
+
+  set query(newQuery) {
+    this.searchQuery = newQuery;
   }
 }
