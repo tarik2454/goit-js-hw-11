@@ -2,22 +2,26 @@ export default function createCardTpl(cards) {
   return cards
     .map(card => {
       return `
-          <div class="photo-card">
-            <a href="${card.largeImageURL}">
-              <img src="${card.webformatURL}" alt="${card.tags}" loading="lazy" />
+          <div class="photo__card">
+            <a class="photo__link" href="${card.largeImageURL}">
+              <img class="photo__img" src="${card.webformatURL}" alt="${card.tags}" loading="lazy" />
             </a>
               <div class="info">
-                <p class="info-item">
-                  <b>${card.likes} Likes</b>
+                <p class="info__item">
+                  <b>Likes</b>
+                  <span>${card.likes}</span>
                 </p>
-                <p class="info-item">
-                  <b>${card.views} Views</b>
+                <p class="info__item">
+                  <b>Views</b>
+                  <span>${card.views}</span>
                 </p>
-                <p class="info-item">
-                  <b>${card.comments} Comments</b>
+                <p class="info__item">
+                  <b>Comments</b>
+                  <span>${card.comments}</span>
                 </p>
-                <p class="info-item">
-                  <b>${card.downloads} Downloads</b>
+                <p class="info__item">
+                  <b>Downloads</b>
+                  <span>${card.downloads}</span>
                 </p>
               </div>
           </div>`;
