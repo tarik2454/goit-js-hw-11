@@ -4,6 +4,7 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import cardsTpl from './js/cards-tpl';
 import ImagesApiService from './js/images-api-sevice';
+import './js/fixid-header';
 
 const searchForm = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
@@ -15,6 +16,8 @@ searchForm.addEventListener('submit', onSearchSubmit);
 
 function onSearchSubmit(event) {
   event.preventDefault();
+
+  window.scrollTo({ top: 0, behavior: 'instant' });
 
   imagesApiService.query =
     event.currentTarget.elements.searchQuery.value.trim();

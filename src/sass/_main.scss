@@ -41,9 +41,19 @@ img {
 }
 
 .header {
+  width: 100%;
   margin-bottom: 30px;
-  background-color: rgb(62 171 255 / 64%);
+  background-color: rgb(110 175 225/ 95%);
   box-shadow: 2px 1px 3px rgba(0, 0, 0, 0.3);
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+
+  &.fixed {
+    position: fixed;
+  }
 }
 
 .search-form {
@@ -93,6 +103,10 @@ button {
   }
 }
 
+.main {
+  margin-top: 115px;
+}
+
 .gallery {
   display: flex;
   flex-wrap: wrap;
@@ -123,11 +137,8 @@ button {
 }
 
 .photo__img {
-  display: block;
-  object-fit: cover;
-
   transform: scale(1.01);
-  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .info {
@@ -151,4 +162,43 @@ b {
 
 span {
   font-size: 13px;
+}
+
+.to-top {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  font-size: 15px;
+  color: #fff;
+  background-color: #6eafe1f2;
+  border-radius: 50%;
+  cursor: pointer;
+
+  transition: all 0.35s ease-in-out;
+  animation: drag 2s ease-in-out infinite;
+
+  position: fixed;
+  right: 5%;
+  bottom: 5%;
+  z-index: 1;
+
+  &.is-visible {
+    opacity: 0.9;
+    visibility: visible;
+    pointer-events: initial;
+
+    &:hover,
+    &:focus {
+      opacity: 1;
+    }
+  }
 }
