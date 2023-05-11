@@ -170,8 +170,8 @@ span {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  width: 60px;
-  height: 60px;
+  width: 55px;
+  height: 55px;
 
   opacity: 0;
   visibility: hidden;
@@ -183,8 +183,8 @@ span {
   border-radius: 50%;
   cursor: pointer;
 
-  transition: all 0.35s ease-in-out;
-  animation: drag 2s ease-in-out infinite;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: drag 2s infinite ease-in-out;
 
   position: fixed;
   right: 5%;
@@ -200,5 +200,17 @@ span {
     &:focus {
       opacity: 1;
     }
+  }
+}
+
+@keyframes drag {
+  0% {
+    transform: translateY(10%);
+  }
+  50% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(10%);
   }
 }
