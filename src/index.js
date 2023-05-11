@@ -4,7 +4,7 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import cardsTpl from './js/cards-tpl';
 import ImagesApiService from './js/images-api-sevice';
-import './js/fixid-header';
+import './js/fixid-header-top-btn';
 
 const searchForm = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
@@ -28,13 +28,15 @@ function onSearchSubmit(event) {
   imagesApiService
     .fetchImages()
     .then(images => {
-      if (images.totalHits > 0) {
-        Notiflix.Notify.success(`Hooray! We found ${images.totalHits} images.`);
-      }
-      if (images.hits.length === 0) {
+      if (imagesApiService.query === '' || images.hits.length === 0) {
         Notiflix.Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );
+
+        return;
+      }
+      if (images.totalHits > 0) {
+        Notiflix.Notify.success(`Hooray! We found ${images.totalHits} images.`);
       }
 
       clearCardContainer();
@@ -65,7 +67,8 @@ function clearCardContainer() {
 
 const onEntry = entries => {
   entries.forEach(entry => {
-    if (entry.isIntersecting && imagesApiService.query !== '') {
+    //&& imagesApiService.query !== ''
+    if (entry.isIntersecting) {
       imagesApiService
         .fetchImages()
         .then(images => {
@@ -79,8 +82,11 @@ const onEntry = entries => {
           }
 
           appendCardsMarkup(images.hits);
-          smoothScrollGallery();
           simpleLightbox.refresh();
+
+          if (images.hits > 40) {
+            smoothScrollGallery();
+          }
         })
         .catch(error => {
           console.warn(`${error}`);
