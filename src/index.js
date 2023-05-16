@@ -5,6 +5,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import cardsTpl from './js/cards-tpl';
 import ImagesApiService from './js/images-api-sevice';
 import './js/fixid-header-top-btn';
+import lazyLoading from './js/lazi-loading';
 
 const searchForm = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
@@ -32,25 +33,24 @@ function onSearchSubmit(event) {
         Notiflix.Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );
-
         return;
       }
       if (images.totalHits > 0) {
         Notiflix.Notify.success(`Hooray! We found ${images.totalHits} images.`);
       }
 
-      clearCardContainer();
-      imagesApiService.incrementLoadedHits(images.hits);
-      appendCardsMarkup(images.hits);
-
-      observer.observe(sentinel);
+      loadImgObserver.observe(sentinel);
 
       if (images.hits.length === images.totalHits) {
-        observer.unobserve(sentinel);
+        loadImgObserver.unobserve(sentinel);
         Notiflix.Notify.info(
           "We're sorry, but you've reached the end of search results."
         );
       }
+
+      clearCardContainer();
+      imagesApiService.incrementLoadedHits(images.hits);
+      appendCardsMarkup(images.hits);
 
       simpleLightbox.refresh();
     })
@@ -59,6 +59,7 @@ function onSearchSubmit(event) {
 
 function appendCardsMarkup(cards) {
   gallery.insertAdjacentHTML('beforeend', cardsTpl(cards));
+  lazyLoading();
 }
 
 function clearCardContainer() {
@@ -68,39 +69,38 @@ function clearCardContainer() {
 const onEntry = entries => {
   entries.forEach(entry => {
     //&& imagesApiService.query !== ''
-    if (entry.isIntersecting) {
-      imagesApiService
-        .fetchImages()
-        .then(images => {
-          imagesApiService.incrementLoadedHits(images.hits);
+    if (!entry.isIntersecting) return;
+    imagesApiService
+      .fetchImages()
+      .then(images => {
+        imagesApiService.incrementLoadedHits(images.hits);
 
-          if (images.totalHits <= imagesApiService.loadedHits) {
-            observer.unobserve(sentinel);
-            Notiflix.Notify.info(
-              "We're sorry, but you've reached the end of search results."
-            );
-          }
+        if (images.totalHits <= imagesApiService.loadedHits) {
+          loadImgObserver.unobserve(sentinel);
+          Notiflix.Notify.info(
+            "We're sorry, but you've reached the end of search results."
+          );
+        }
+        if (images.hits > 40) {
+          smoothScrollGallery();
+        }
 
-          appendCardsMarkup(images.hits);
-          simpleLightbox.refresh();
-
-          if (images.hits > 40) {
-            smoothScrollGallery();
-          }
-        })
-        .catch(error => {
-          console.warn(`${error}`);
-        });
-    }
+        appendCardsMarkup(images.hits);
+        simpleLightbox.refresh();
+      })
+      .catch(error => {
+        console.warn(`${error}`);
+      });
   });
 };
 
 const options = {
+  root: null,
   rootMargin: '200px',
 };
 
-const observer = new IntersectionObserver(onEntry, options);
-observer.observe(sentinel);
+const loadImgObserver = new IntersectionObserver(onEntry, options);
+loadImgObserver.observe(sentinel);
 
 const simpleLightbox = new SimpleLightbox('.gallery a', {
   fadeSpeed: 100,

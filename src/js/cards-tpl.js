@@ -4,7 +4,7 @@ export default function createCardTpl(cards) {
       return `
           <div class="photo__card">
             <a class="photo__link" href="${card.largeImageURL}">
-              <img class="photo__img" src="${card.webformatURL}" alt="${card.tags}" loading="lazy" />
+              <img class="photo__img lazyload" data-src="${card.webformatURL}" alt="${card.tags}" loading="lazy" />
             </a>
               <div class="info">
                 <p class="info__item">
