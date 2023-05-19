@@ -68,7 +68,6 @@ function clearCardContainer() {
 
 const onEntry = entries => {
   entries.forEach(entry => {
-    //&& imagesApiService.query !== ''
     if (!entry.isIntersecting) return;
     imagesApiService
       .fetchImages()

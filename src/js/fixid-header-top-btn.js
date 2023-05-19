@@ -2,6 +2,10 @@ const header = document.querySelector('.js-header');
 const headerHeight = header.offsetHeight;
 const topBtn = document.querySelector('.js-to-top');
 
+const searchForm = document.querySelector('.search-form ');
+const he = searchForm.offsetWidth;
+console.log(he);
+
 window.onscroll = function () {
   if (window.pageYOffset > headerHeight) {
     header.classList.add('fixed');
