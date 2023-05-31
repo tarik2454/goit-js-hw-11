@@ -1,6 +1,6 @@
 export default function lazyLoading() {
   if ('loading' in HTMLImageElement.prototype) {
-    console.log('Браузер поддерживает lazyload');
+    console.log('Browser supports lazyload');
 
     const lazyImages = document.querySelectorAll('img[loading="lazy"]');
 
@@ -8,7 +8,7 @@ export default function lazyLoading() {
       image.src = image.dataset.src;
     });
   } else {
-    console.log('Браузер НЕ поддерживает lazyload');
+    console.log('Browser does NOT support lazyload');
 
     const lazyImages = [].slice.call(
       document.querySelectorAll('img[loading="lazy"]')
@@ -32,9 +32,10 @@ export default function lazyLoading() {
   }
 }
 
+//// option to lazy load images using the lazysizes library
 // export default function lazyLoading() {
 //   if ('loading' in HTMLImageElement.prototype) {
-//     console.log('Браузер поддерживает lazyload');
+//     console.log('Browser supports lazyload');
 
 //     const lazyImages = document.querySelectorAll('img[loading="lazy"]');
 
@@ -42,7 +43,7 @@ export default function lazyLoading() {
 //       image.src = image.dataset.src;
 //     });
 //   } else {
-//     console.log('Браузер НЕ поддерживает lazyload');
+//     console.log('Browser does NOT support lazyload');
 
 //     const script = document.createElement('script');
 //     script.src =

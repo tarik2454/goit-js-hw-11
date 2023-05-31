@@ -3,8 +3,6 @@ const headerHeight = header.offsetHeight;
 const topBtn = document.querySelector('.js-to-top');
 
 const searchForm = document.querySelector('.search-form ');
-const he = searchForm.offsetWidth;
-console.log(he);
 
 window.onscroll = function () {
   if (window.pageYOffset > headerHeight) {

@@ -1,5 +1,5 @@
 import Notiflix from 'notiflix';
-// import axios from 'axios';
+
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import cardsTpl from './js/cards-tpl';
@@ -69,6 +69,7 @@ function clearCardContainer() {
 const onEntry = entries => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
+
     imagesApiService
       .fetchImages()
       .then(images => {
@@ -95,7 +96,7 @@ const onEntry = entries => {
 
 const options = {
   root: null,
-  rootMargin: '200px',
+  rootMargin: '300px',
 };
 
 const loadImgObserver = new IntersectionObserver(onEntry, options);
