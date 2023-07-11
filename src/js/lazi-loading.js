@@ -10,15 +10,13 @@ export default function lazyLoading() {
   } else {
     console.log('Browser does NOT support lazyload');
 
-    const lazyImages = [].slice.call(
-      document.querySelectorAll('img[loading="lazy"]')
-    );
+    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
 
     const callback = (entries, observer) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.src = entry.target.dataset.src;
-        observer.unobserve(entry.target);
+      entries.forEach(({ isIntersecting, target }) => {
+        if (!isIntersecting) return;
+        target.src = target.dataset.src;
+        observer.unobserve(target);
       });
     };
 
