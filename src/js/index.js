@@ -19,16 +19,16 @@ async function onSearchSubmit(event) {
 
   window.scrollTo({ top: 0, behavior: 'instant' });
 
-  imagesApiService.searchQuery =
+  imagesApiService.query =
     event.currentTarget.elements.searchQuery.value.trim();
 
   imagesApiService.resetPage();
   imagesApiService.resetLoadedHits();
-  clearCardContainer();
 
   try {
     const imagesObject = await imagesApiService.fetchImages();
     const { hits, totalHits } = imagesObject;
+    clearCardContainer();
 
     if (imagesApiService.query === '' || hits.length === 0) {
       Notiflix.Notify.failure(
@@ -42,7 +42,7 @@ async function onSearchSubmit(event) {
 
     loadImgObserver.observe(sentinel);
 
-    if (hits.length === totalHits) {
+    if (hits.length === totalHits && hits.length > 0) {
       loadImgObserver.unobserve(sentinel);
       Notiflix.Notify.info(
         "We're sorry, but you've reached the end of search results."
@@ -51,8 +51,8 @@ async function onSearchSubmit(event) {
 
     imagesApiService.incrementLoadedHits(hits);
     appendCardsMarkup(hits);
-
     simpleLightbox.refresh();
+    loadImgObserver.unobserve(sentinel);
   } catch (error) {
     console.warn(error);
   }

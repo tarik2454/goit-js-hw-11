@@ -42,11 +42,11 @@ export default class ImagesApiService {
     this.loadedHits = 0;
   }
 
-  // get query() {
-  //   return this.searchQuery;
-  // }
+  get query() {
+    return this.searchQuery;
+  }
 
-  // set query(newQuery) {
-  //   this.searchQuery = newQuery;
-  // }
+  set query(newQuery) {
+    this.searchQuery = newQuery;
+  }
 }
